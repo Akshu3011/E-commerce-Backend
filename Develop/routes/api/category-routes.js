@@ -23,16 +23,7 @@ router.get('/:id', async (req, res) => {
   // be sure to include its associated Products
   try {
     const categoryData = await Category.findByPk(req.params.id, {
-      include: [{ model: Product }, { model: Category }],
-      attributes: {
-        include: [
-          [
-            sequelize.literal(
-              '()'
-            ),
-          ],
-        ],
-      },
+      include: [{ model: Product }],
     });
 
     if (!categoryData) {
@@ -59,11 +50,11 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   // update a category by its `id` value
   try {
-    const categoryData = await Category.update({
-      where: {
-        id: req.params.id,
-      },
-    });
+    const categoryData = await Category.update(
+      {category_name: req.body.catergory_name },{returning: true, where: { id: req.params.id} }
+     
+      
+    );
 
     if (!categoryData) {
       res.status(404).json({ message: 'No Category found with that id!' });
